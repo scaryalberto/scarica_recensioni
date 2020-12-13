@@ -1,5 +1,4 @@
-
-# PER SIMONE: lascia questo è l'unico pezzzo di codice che deve restare a se stante... ed è il primo da eseguire
+#questa prima parte del codice è un riadattamento ad un progetto già presente su github
 import json
 import random
 import urllib3
@@ -192,7 +191,7 @@ import requests
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
-#facciamo una lista di parole da cercare
+#facciamo una lista di parole da cercare, presente nel txt di questo stesso progetto
 #lista parole https://raw.githubusercontent.com/napolux/paroleitaliane/master/paroleitaliane/60000_parole_italiane.txt
 prodotti_da_cercare=['mouse', 'tavolo', 'bottiglia', 'cuffie', 'radio']
 
@@ -200,7 +199,6 @@ f = open('parole.txt', 'r')
 prodotti_da_cercare = f.read().splitlines()
 f.close()
 prodotti_da_cercare = [ word for word in prodotti_da_cercare if len(word) > 4 ]#rimuovo le parole troppo corte
-#n=2000
 prodotti_da_cercare=prodotti_da_cercare#[:n]
 
 dizionario={} #infine ci prendiamosolamente le recensioni che hanno il voto pari a 5 ed 1
@@ -237,7 +235,7 @@ for idx, i in enumerate(prodotti_da_cercare):
                   if len(review_total_pages)>0:
                       for i in review_total_pages:
                           res=Counter(dizionario.values())
-                          voto=i['review_rating']#---->risoltato del metodo precendente
+                          voto=i['review_rating']#---->risultato del metodo precendente
                           if voto=='':
                               continue
                               

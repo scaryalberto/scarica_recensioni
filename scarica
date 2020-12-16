@@ -1,3 +1,5 @@
+
+
 #questa prima parte del codice è un riadattamento ad un progetto già presente su github
 import json
 import random
@@ -122,9 +124,9 @@ def download_site(url):
             full_review_text = ' '.join(' '.join(raw_review_text3).split())
 
         review_dict = {
-            #'review_text': full_review_text,
+            'review_text': full_review_text,
             #'review_posted_date': review_posted_date,
-            'review_header': review_header,
+            #'review_header': review_header,
             'review_rating': review_rating,
             #'review_author': author
         }
@@ -186,6 +188,8 @@ if __name__ == '__main__':
 
 #######################################################
 #!pip install bs4
+from langdetect import detect
+
 import time
 import requests
 from urllib.request import urlopen
@@ -193,7 +197,7 @@ from bs4 import BeautifulSoup
 
 #facciamo una lista di parole da cercare, presente nel txt di questo stesso progetto
 #lista parole https://raw.githubusercontent.com/napolux/paroleitaliane/master/paroleitaliane/60000_parole_italiane.txt
-prodotti_da_cercare=['mouse', 'tavolo', 'bottiglia', 'cuffie', 'radio']
+#prodotti_da_cercare=['mouse', 'tavolo', 'bottiglia', 'cuffie', 'radio']
 
 f = open('parole.txt', 'r')
 prodotti_da_cercare = f.read().splitlines()
@@ -223,38 +227,35 @@ for idx, i in enumerate(prodotti_da_cercare):
               for idx, i in enumerate(link):
                 n_max=1
                 if i == ">":
-                  #link_prodotti_da_migliorare.append(link[45:(n_max-2)])
                   link=link[45:(n_max-2)]
                   link=link.split(">\n")[0]
                   a="https://www.amazon.it"
-                  #link_prodotti_completo.append(a+link)
-                  #print(a+link)
                   a=a+link
                   download_site(a)#metodo che prende le recensioni di ogni sngola pagina web
-                  #print(review_total_pages)
                   if len(review_total_pages)>0:
                       for i in review_total_pages:
-                          res=Counter(dizionario.values())
-                          voto=i['review_rating']#---->risultato del metodo precendente
-                          if voto=='':
-                              continue
-                              
-                          if voto[0]=='5' and res['5']<25000:
-                              commento=i['review_header']
-                              dizionario[commento] = voto[0]
-                              print(res)
-
-                                                    
-                          if voto[0]=='1' and res['1']<25000:
-                              commento=i['review_header']
-                              dizionario[commento] = voto[0]
-                              print(res)
-
-                              
-                          if  len(dizionario)>=50000:
-                              print(len(dizionario))
-                              break
+                          if detect(i['review_text'])=="it":#se la recensione è in italiano, la aggiungiamo                     
+                              res=Counter(dizionario.values())
+                              voto=i['review_rating']#---->risultato del metodo precendente
+                              if voto=='':
+                                  continue
+                                  
+                              if voto[0]=='5' and res['5']<25000:
+                                  commento=i['review_text']
+                                  dizionario[commento] = voto[0]
+                                  print(res)
     
+                                                        
+                              if voto[0]=='1' and res['1']<25000:
+                                  commento=i['review_text']
+                                  dizionario[commento] = voto[0]
+                                  print(res)
+    
+                                  
+                              if  len(dizionario)>=50000:
+                                  print(len(dizionario))
+                                  break
+        
                         
                   break
                 else:
@@ -263,7 +264,3 @@ for idx, i in enumerate(prodotti_da_cercare):
   except:
       print("ERROREEEEEEEEE")
       continue
-      
-
-
-
